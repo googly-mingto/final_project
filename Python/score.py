@@ -20,7 +20,7 @@ class Scoreboard:
         print ("{} is playing Game{}!".format(self.team, self.game))
 
         self.cardList = [int(a, 16) for a in raw_data.T[0]]
-
+        print(self.cardList)
         if self.game == 0:
             # data member specific for Game1: self.cardValue, self.visitList
             self.visitList = list()

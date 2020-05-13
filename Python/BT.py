@@ -32,24 +32,29 @@ class bluetooth:
     def SerialReadString(self):
         # TODO: Get the information from Bluetooth. Notice that the return type should be transformed into hex.
         sleep(0.05)
-        waiting = self.ser.inWaiting()
+        waiting = self.ser.in_waiting
         if waiting :
             rv = self.ser.read(waiting).decode("utf-8")
             self.ser.flushInput()
             print(rv)
             return rv
-        print('nothing to read')
+        #print('nothing to read')
         return ""
 
     def SerialReadByte(self):
-        sleep(0.05)
-        waiting = self.ser.inWaiting()
+        sleep(1)
+        waiting = self.ser.in_waiting
+        
         rv = self.ser.read(waiting)
         if(rv):
-            UID = hex(int.from_bytes(rv, byteorder='big', signed=False))
+            print(waiting)
+            print(rv)
+            print(int(rv, 16))
+            temp = int(rv, 16).to_bytes(4, byteorder='big')
+            UID = hex(int.from_bytes(temp, byteorder='big', signed=False))
             self.ser.flushInput()
             return UID
         else:
             return 0
-
+    
 

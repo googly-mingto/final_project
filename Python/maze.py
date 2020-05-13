@@ -49,6 +49,7 @@ class Maze:
             print("Error: the start point is not included.")
             return 0
         self.now = 1
+        self.now_d = self.nd_dict[1].Successors[0][1].value
         return self.nd_dict[1]
 
     def getNodeDict(self):
@@ -57,6 +58,7 @@ class Maze:
     def BFS(self, nd):
         # TODO : design your data structure here for your algorithm
         # Tips : return a sequence of nodes from the node to the nearest unexplored deadend
+        """        
         nearest = self.deadend[0]
         min_d = abs(nearest- nd)
         
@@ -65,6 +67,18 @@ class Maze:
             if diff < min_d:
                 min_d = diff
                 nearest = index
+        self.deadend.remove(nearest)
+        """
+        nearest = self.deadend[0]
+        min_p = len(self.BFS_2(nd, nearest))
+        for candidate in self.deadend[1:]:
+            length = len(self.BFS_2(nd, candidate))
+            if length < min_p:
+                min_p = length
+                nearest = candidate
+
+        self.deadend.remove(nearest)
+
         return self.BFS_2(nd, nearest)
 
 
@@ -102,20 +116,22 @@ class Maze:
             temp = pre_dict[temp]
         result.pop()
         result.reverse()
+
         return result
 
     def getAction(self, car_dir, nd_from, nd_to):
         # TODO : get the car action
         # Tips : return an action and the next direction of the car
+        destination_dir = ''
         for succ in self.nd_dict[nd_from].Successors:
             if succ[0] == nd_to:
                 destination_dir = self.nd_dict[nd_from].getDirection(nd_to)
                 break
-        self.now = destination_dir
-
+        self.now_d = destination_dir
+        self.now = nd_to
         if car_dir == 1:
             if destination_dir == 1:
-                return Action.ADVANCE
+                return Action.ADVANCE.value
             elif destination_dir == 2:
                 return Action.U_TURN.value
             elif destination_dir == 3:
@@ -127,7 +143,7 @@ class Maze:
         
         elif car_dir == 2:
             if destination_dir == 2:
-                return Action.ADVANCE
+                return Action.ADVANCE.value
             elif destination_dir == 1:
                 return Action.U_TURN.value
             elif destination_dir == 4:
@@ -139,7 +155,7 @@ class Maze:
 
         elif car_dir == 3:
             if destination_dir == 3:
-                return Action.ADVANCE
+                return Action.ADVANCE.value
             elif destination_dir == 4:
                 return Action.U_TURN.value
             elif destination_dir == 2:
@@ -151,7 +167,7 @@ class Maze:
         
         elif car_dir == 4:
             if destination_dir == 4:
-                return Action.ADVANCE
+                return Action.ADVANCE.value
             elif destination_dir == 3:
                 return Action.U_TURN.value
             elif destination_dir == 1:
@@ -170,7 +186,17 @@ class Maze:
 
 if __name__ == '__main__':
     start = time.time()
-    test = Maze("data/small_maze.csv")
-    print(test.strategy_2(1, 6))
+    maze = Maze("data/medium_maze.csv")
+    maze.getStartPoint()
+    message_L = []
+    direct = []
+    sequence = [3, 10, 5, 7, 2, 6]
+    while len(maze.deadend) != 0:
+        path = maze.strategy(maze.now)
+        while len(path) != 0:
+            print(path[0])
+            direct.append(maze.getAction(maze.now_d, maze.now, path.pop(0)))
+    
+    print(direct)
     end = time.time()
     print(end-start)

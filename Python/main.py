@@ -3,6 +3,7 @@ import maze as mz
 import score
 import interface
 import time
+import threading
 
 import numpy as np
 import pandas
@@ -21,51 +22,46 @@ def main():
         print("Mode 0: for treasure-hunting with rule 1")
         # TODO : for treasure-hunting with rule 1, which encourages you to hunt as many scores as possible
         maze.getStartPoint()
+        message_L = []
+        direct_L = []
         while len(maze.deadend) != 0:
             path = maze.strategy(maze.now)
-            direct = []
             while len(path) != 0:
-                direct.append(maze.getAction(maze.now))
-            message_L = []
-            while len(direct) != 0:
-                message.append(interf.save_action(direct.pop(0)))
-            message = ''.join(message_L)
-            interf.send_action(message)
-
-            while True:
-                receive = interf.SyrialReadString()
-                if receive == '':
-                    pass
-                else:
-                    UID = interf.get_UID()
-                    point.add_UID(UID)
-                    point.getCurrentScore()
-                    break
+                direct_L.append(maze.getAction(maze.now_d, maze.now, path.pop(0)))
+            
+        while len(direct_L) != 0:
+            message_L.append(interf.save_action(direct_L.pop(0)))
+            
+        message = ''.join(message_L)
+        interf.send_action(message)
+        
+        while True:
+            UID = interf.get_UID()
+            if UID != 0:
+                point.add_UID(UID)
+                point.getCurrentScore()
 
     elif (sys.argv[1] == '1'):
         print("Mode 1: for treasure-hunting with rule 2")
         # TODO : for treasure-hunting with rule 2, which requires you to hunt as many specified treasures as possible
         maze.getStartPoint()
+        message_L = []
+        direct_L = []
         while len(point.sequence) != 0:
             path = maze.strategy_2(maze.now, point.sequence.pop(0))
-            direct = []
             while len(path) != 0:
-                direct.append(maze.getAction(maze.now))
-            message_L = []
-            while len(direct) != 0:
-                message.append(interf.save_action(direct.pop(0)))
-            message = ''.join(message_L)
-            interf.send_action(message)
+                direct_L.append(maze.getAction(maze.now_d, maze.now, path.pop(0)))
+        while len(direct_L) != 0:
+            message_L.append(interf.save_action(direct_L.pop(0)))
+        
+        message = ''.join(message_L)
+        interf.send_action(message)   
 
-            while True:
-                receive = interf.SyrialReadString()
-                if receive == '':
-                    pass
-                else:
-                    UID = interf.get_UID()
-                    point.add_UID(UID)
-                    point.getCurrentScore()
-                    break
+        while True:
+            UID = interf.get_UID()
+            if UID != 0:
+                point.add_UID(UID)
+                point.getCurrentScore()
 
 
 
@@ -73,9 +69,14 @@ def main():
     elif (sys.argv[1] == '2'):
         print("Mode 2: Self-testing mode.")
         # TODO: You can write your code to test specific function.
+        time.sleep(1)
+        interf.send_action('goe')
+        #readThread = threading.Thread(target=interf.get_UID())
+        #readThread.setDaemon(True)
+        #readThread.start()
         while True:
-            
-            print(interf.get_message())
+            mes = input()
+            interf.send_action(mes)
         
 
 if __name__ == '__main__':
