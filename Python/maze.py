@@ -25,10 +25,13 @@ class Maze:
             self.nd_dict[i+1] = Node(i+1)
             for element in self.raw_data[i][1:5]:
                 if not np.isnan(element):
+                    #adjacency list
                     for index in np.where(self.raw_data[i][1:5] == element):
                         self.nd_dict[i+1].setSuccessor(int(element), index+1, 2)
+            #deadend list            
             if len(self.nd_dict[i+1].Successors) == 1:
                 self.deadend.append(i+1)
+        #except 1
         try:
             self.deadend.remove(1)
         except:
@@ -45,6 +48,7 @@ class Maze:
         """
 
     def getStartPoint(self):
+        #initialization
         if (len(self.nd_dict) < 2):
             print("Error: the start point is not included.")
             return 0

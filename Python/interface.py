@@ -24,20 +24,21 @@ class interface:
             UID = self.ser.SerialReadByte()
             if UID != 0:
                 print(int(UID,16))
+                return UID
         #return self.ser.SerialReadByte()
 
     def save_action(self,dirc):
         # TODO : send the action to car
         if dirc == 1:
-            message = 'a'
+            message = 'a' #advance
         elif dirc == 2:
-            message = 'u'
+            message = 'u' #U turn
         elif dirc == 3:
-            message = 'r'
+            message = 'r' #turn right
         elif dirc == 4:
-            message = 'l'
+            message = 'l' #turn left
         elif dirc == 5:
-            message = 'h'
+            message = 'h' #halt
             
         return message
 
@@ -47,13 +48,14 @@ class interface:
         return self.ser.SerialWrite(dirc_m+'e')
 
     def get_message(self):
+        # get the message from car
         return self.ser.SerialReadString()
 
-
+"""
     def end_process(self):
         self.ser.SerialWrite('e')
         self.ser.disconnect()
-
+"""
 if __name__ == '__main__':
     interf = interface()
 

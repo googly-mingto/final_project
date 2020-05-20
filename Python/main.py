@@ -3,7 +3,7 @@ import maze as mz
 import score
 import interface
 import time
-import threading
+#import threading
 
 import numpy as np
 import pandas
@@ -13,8 +13,8 @@ import os
 
 
 def main():
-    maze = mz.Maze("data/small_maze.csv")
-    point = score.Scoreboard("data/UID.csv", "team_NTUEE", sys.argv[1])
+    maze = mz.Maze("data/medium_maze.csv")
+    point = score.Scoreboard("data/medium_maze_UID.csv", "team_wbb", sys.argv[1])
     interf = interface.interface()
     # TODO : Initialize necessary variables
 
@@ -31,15 +31,19 @@ def main():
             
         while len(direct_L) != 0:
             message_L.append(interf.save_action(direct_L.pop(0)))
-            
+        
+        message_L.pop(0)
+        #send all paths    
         message = ''.join(message_L)
         interf.send_action(message)
         
+        #score
         while True:
             UID = interf.get_UID()
             if UID != 0:
                 point.add_UID(UID)
-                point.getCurrentScore()
+                now_score = point.getCurrentScore()
+                print("score:", now_score)
 
     elif (sys.argv[1] == '1'):
         print("Mode 1: for treasure-hunting with rule 2")
@@ -54,30 +58,25 @@ def main():
         while len(direct_L) != 0:
             message_L.append(interf.save_action(direct_L.pop(0)))
         
+        message_L.pop(0)
+        #send all paths
         message = ''.join(message_L)
         interf.send_action(message)   
 
+        #score
         while True:
             UID = interf.get_UID()
             if UID != 0:
                 point.add_UID(UID)
-                point.getCurrentScore()
+                now_score = point.getCurrentScore()
+                print("score:", now_score)
 
-
-
-        
+#TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     elif (sys.argv[1] == '2'):
-        print("Mode 2: Self-testing mode.")
-        # TODO: You can write your code to test specific function.
-        time.sleep(1)
-        interf.send_action('goe')
-        #readThread = threading.Thread(target=interf.get_UID())
-        #readThread.setDaemon(True)
-        #readThread.start()
         while True:
-            mes = input()
-            interf.send_action(mes)
-        
+
+            print(point.getCurrentScore())                                              #
+#TEST~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       
 
 if __name__ == '__main__':
     main()
