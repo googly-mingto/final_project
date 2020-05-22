@@ -14,7 +14,7 @@ import os
 
 def main():
     maze = mz.Maze("data/medium_maze.csv")
-    point = score.Scoreboard("data/medium_maze_UID.csv", "team_wbb", sys.argv[1])
+    point = score.Scoreboard("data/medium_maze_UID.csv", "Mingto's English Corner", sys.argv[1])
     interf = interface.interface()
     # TODO : Initialize necessary variables
 
