@@ -35,11 +35,11 @@ class Scoreboard:
             print("CardList:", list(map(hex, self.cardList)))
             sequence_str = input("Enter your sequence (by index, split by spacebars): ")
             self.sequence = list(map(int, sequence_str.split(' ')))
-            print(self.sequence)
             self.sequence_idx = 0
 
     def add_UID(self, UID_str):
         UID = int(UID_str,16)
+
         if UID not in self.cardList:
             print("This UID doesn't exist in the UID list file:", hex(UID))
         else:
@@ -55,11 +55,8 @@ class Scoreboard:
                     self.visitList.append(UID)
 
             elif self.game == 1:
-                print("seq:", self.sequence)
                 if self.sequence_idx >= len(self.sequence):
                     print("A treasure is found! But you finish the sequence already.")
-                    print("idx:", self.sequence_idx)
-                    print("seq:", len(self.sequence))
                 elif UID == self.cardList[self.sequence[self.sequence_idx]]:
                     self.totalScore += 100
                     print("A treasure is found! You got 100 points.")

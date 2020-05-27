@@ -1,5 +1,5 @@
 import BT
-import maze_dijk
+import maze
 import score
 
 # hint: You may design additional functions to execute the input command, which will be helpful when debugging :)

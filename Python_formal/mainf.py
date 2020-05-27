@@ -1,5 +1,5 @@
 from node import *
-import maze_dijk as mz
+import maze_from_far as mz
 import score
 import interface
 import time
@@ -14,8 +14,11 @@ import os
 
 def main():
     maze = mz.Maze("data/small_maze.csv")
-    point = score.Scoreboard("data/UID.csv", "Mingto's English Corner", sys.argv[1])
     interf = interface.interface()
+    if (sys.argv[1] == '1'):
+        sequence = input("Enter your sequence.(by index, split by spacebars): ")
+    point = score.Scoreboard("data/UID.csv", "Mingto's English Corner", sys.argv[1])
+    
     # TODO : Initialize necessary variables
 
     if (sys.argv[1] == '0'):
@@ -24,6 +27,10 @@ def main():
         maze.getStartPoint()
         message_L = []
         direct_L = []
+        path = maze.strategy_from_far(maze.now)
+        while len(path) != 0:
+            direct_L.append(maze.getAction(maze.now_d, maze.now, path.pop(0)))
+        
         while len(maze.deadend) != 0:
             path = maze.strategy(maze.now)
             while len(path) != 0:
@@ -51,7 +58,6 @@ def main():
         maze.getStartPoint()
         message_L = []
         direct_L = []
-        sequence = point.sequence
         while len(sequence) != 0:
             path = maze.strategy_2(maze.now, sequence.pop(0))
             while len(path) != 0:

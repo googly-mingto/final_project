@@ -1,5 +1,5 @@
 from node import *
-import maze_dijk as mz
+import maze_from_far as mz
 import score
 import interface
 import time
@@ -13,8 +13,8 @@ import os
 
 
 def main():
-    maze = mz.Maze("data/small_maze.csv")
-    point = score.Scoreboard("data/UID.csv", "Mingto's English Corner", sys.argv[1])
+    maze = mz.Maze("data/medium_maze.csv")
+    point = score.Scoreboard("data/medium_maze_UID.csv", "Mingto's English Corner", sys.argv[1])
     interf = interface.interface()
     # TODO : Initialize necessary variables
 
@@ -24,6 +24,10 @@ def main():
         maze.getStartPoint()
         message_L = []
         direct_L = []
+        path = maze.strategy_from_far(maze.now)
+        while len(path) != 0:
+            direct_L.append(maze.getAction(maze.now_d, maze.now, path.pop(0)))
+        
         while len(maze.deadend) != 0:
             path = maze.strategy(maze.now)
             while len(path) != 0:
