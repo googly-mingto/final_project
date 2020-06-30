@@ -8,8 +8,8 @@ import csv
 import threading
 import sys
 
+
 communication = BTgui.interface()
-cc = 0
 bt_process = None
 def receive():
 	while True:
@@ -25,9 +25,11 @@ def receive():
 def process():
 	global bt_process
 	bt_process = threading.Thread(target=receive)
+	bt_process.daemon = True
 	bt_process.start()
 
 process()
+
 
 window = Tk()
 window.title("老司機送餐系統")
@@ -89,8 +91,16 @@ carcar_temp = Image.open("pic/carcar.jpg")
 carcar_temp = carcar_temp.resize((350, 150), Image.ANTIALIAS)
 carcar_pic = ImageTk.PhotoImage(carcar_temp)
 
+ji_temp = Image.open("pic/雞.jpg")
+ji_temp = ji_temp.resize((230, 160), Image.ANTIALIAS)
+ji_pic = ImageTk.PhotoImage(ji_temp)
+
+water_temp = Image.open("pic/water.jpg")
+water_temp = water_temp.resize((200, 150), Image.ANTIALIAS)
+water_pic = ImageTk.PhotoImage(water_temp)
+
 class Dish():
-	pos = 40
+	pos = 20
 	total = 0
 	order = 0
 	def __init__(self, name):
@@ -102,10 +112,10 @@ class Dish():
 		self.up = Button(choose, image=up_pic, bg="mint cream", command=self.plus)
 		self.zero = Button(choose, text="R", width=2, font=button_font, bg="mint cream", command=self.reset)
 		self.label.place(x=15, y=Dish.pos-4)
-		self.count.place(x=100, y=Dish.pos)
-		self.up.place(x=140, y=Dish.pos)
-		self.down.place(x=180, y=Dish.pos)
-		self.zero.place(x=220, y=Dish.pos)
+		self.count.place(x=120, y=Dish.pos)
+		self.up.place(x=160, y=Dish.pos)
+		self.down.place(x=200, y=Dish.pos)
+		self.zero.place(x=240, y=Dish.pos)
 		Dish.pos += 35
 		Dish.total += 1
 
@@ -114,20 +124,31 @@ class Dish():
 		Dish.order += 1
 		self.count.config(text=self.num)
 		self.down.config(state='normal')
+		nothing.up.config(state="disabled")
+		nothing.down.config(state="disabled")
+		nothing.zero.config(state="disabled")
 	def minus(self):
 		self.num -= 1
 		Dish.order -= 1
 		self.count.config(text=self.num)
 		if self.num == 0:
 			self.down.config(state="disabled")
+		if (Drink.order+Dish.order) == 0:
+			nothing.up.config(state="normal")
+			nothing.down.config(state="disabled")
+			nothing.zero.config(state="normal")
 	def reset(self):
+		Dish.order -= self.num
 		self.num = 0
-		Dish.order = 0
 		self.count.config(text=self.num)
 		self.down.config(state="disabled")
+		if (Drink.order+Dish.order) == 0:
+			nothing.up.config(state="normal")
+			nothing.down.config(state="disabled")
+			nothing.zero.config(state="normal")
 
 class Drink():
-	pos = 40
+	pos = 20
 	total = 0
 	order = 0
 	def __init__(self, name):
@@ -151,18 +172,95 @@ class Drink():
 		Drink.order += 1
 		self.count.config(text=self.num)
 		self.down.config(state='normal')
+		nothing.up.config(state="disabled")
+		nothing.down.config(state="disabled")
+		nothing.zero.config(state="disabled")
+
 	def minus(self):
 		self.num -= 1
 		Drink.order -= 1
 		self.count.config(text=self.num)
 		if self.num == 0:
 			self.down.config(state="disabled")
+		if (Drink.order+Dish.order) == 0:
+			nothing.up.config(state="normal")
+			nothing.down.config(state="disabled")
+			nothing.zero.config(state="normal")
+	
 	def reset(self):
+		Drink.order -= self.num
 		self.num = 0
-		Drink.order = 0
 		self.count.config(text=self.num)
 		self.down.config(state="disabled")
+		if (Drink.order+Dish.order) == 0:
+			nothing.up.config(state="normal")
+			nothing.down.config(state="disabled")
+			nothing.zero.config(state="normal")
 
+class Africa():
+	pos = 230
+	order = 0
+	def __init__(self, name):
+		self.name = name
+		self.num = 0
+		self.label = Label(choose, text=self.name, font=dish_font, bg="goldenrod1", fg="brown1")
+		self.count = Button(choose, width=2, height=1, text=self.num, font=button_font, bg="mint cream", fg="Blue", pady=1, state='disabled')
+		self.down = Button(choose, image=down_pic, bg="mint cream", command=self.minus, state='disabled')
+		self.up = Button(choose, image=up_pic, bg="mint cream", command=self.plus)
+		self.zero = Button(choose, text="R", width=2, font=button_font, bg="mint cream", command=self.reset)
+		self.label.place(x=15, y=Africa.pos-4)
+		self.count.place(x=120, y=Africa.pos)
+		self.up.place(x=160, y=Africa.pos)
+		self.down.place(x=200, y=Africa.pos)
+		self.zero.place(x=240, y=Africa.pos)
+
+	def plus(self):
+		self.num += 1
+		Africa.order = 100
+		self.count.config(text=self.num)
+		self.up.config(state="disabled")
+		self.down.config(state='normal')
+		for ele in dish_name:
+			dish[ele].down.config(state="disabled")
+			dish[ele].up.config(state="disabled") 
+			dish[ele].zero.config(state="disabled") 
+
+		for ele in drink_name:
+			drink[ele].down.config(state="disabled")
+			drink[ele].up.config(state="disabled")
+			drink[ele].zero.config(state="disabled")
+
+
+	def minus(self):
+		self.num -= 1
+		Africa.order = 0
+		self.count.config(text=self.num)
+		self.down.config(state="disabled")
+		self.up.config(state="normal")
+		for ele in dish_name:
+			dish[ele].down.config(state="disabled")
+			dish[ele].up.config(state="normal") 
+			dish[ele].zero.config(state="normal") 
+
+		for ele in drink_name:
+			drink[ele].down.config(state="disabled")
+			drink[ele].up.config(state="normal")
+			drink[ele].zero.config(state="normal")
+		
+	def reset(self):
+		self.num = 0
+		Africa.order = 0
+		self.count.config(text=self.num)
+		self.down.config(state="disabled")
+		for ele in dish_name:
+			dish[ele].down.config(state="disabled")
+			dish[ele].up.config(state="normal") 
+			dish[ele].zero.config(state="normal") 
+
+		for ele in drink_name:
+			drink[ele].down.config(state="disabled")
+			drink[ele].up.config(state="normal")
+			drink[ele].zero.config(state="normal")
 
 class Table_number():	
 	
@@ -189,6 +287,8 @@ car_img.place(x=30, y=20)
 
 carcar_img = Label(window, image=carcar_pic, bd=5, relief="sunken")
 carcar_img.place(x=800, y=20)
+
+
 #Choose your orders
 choose = LabelFrame(window, text="請選擇您的餐點", labelanchor=N, width=500, height=500, bg="goldenrod1", bd=10, relief="ridge", fg="brown1", font=choose_font)
 choose.pack(padx=30, ipadx=50, side=LEFT)
@@ -197,6 +297,19 @@ for ele in dish_name:
 	dish[ele] = Dish(ele)
 for ele in drink_name:
 	drink[ele] = Drink(ele)
+nothing = Africa("非洲佳餚")
+
+ji_img = Label(choose, image=ji_pic, bd=3, relief="sunken")
+ji_img.place(x=25, y=285)
+
+"""
+def sing():
+
+song_img = Button(choose, image=song_pic, bd=3, relief="sunken", command=sing)
+song_img.place(x=330, y=295)
+"""
+water_img = Label(choose, image=water_pic, bd=3, relief="sunken")
+water_img.place(x=330, y=295)
 
 #Info
 info = LabelFrame(window, text="請確認您的用餐資訊", labelanchor=N, width=500, height=500, bg="tomato1", bd=10, relief="ridge", fg="goldenrod1", font=info_font)
@@ -236,7 +349,7 @@ weight_list, go_path_list, number_list, back_path_list = [], [], [], []
 def store():
 	global weight_list, go_path_list, number_list, back_path_list, PS_word
 
-	weight_list.append(Dish.order)
+	weight_list.append(Dish.order+Drink.order+Africa.order)
 	
 	path = seats.strategy(counter_num, Table_number.number)
 	go_path_list.append(path)
@@ -263,6 +376,8 @@ def store():
 				quantity = value.num
 				mes = str(quantity)+"×"+ key
 				dish_order += (mes+',')
+		if Africa.order != 0:
+			dish_order += "非洲佳餚x1,"
 
 		now = time.localtime()
 		date = str(now.tm_year)+'/'+str(now.tm_mon)+'/'+str(now.tm_mday)
@@ -273,7 +388,7 @@ def store():
 def delete():
 	global PS_word, var
 
-	if Table_number.number == None or (Dish.order+Drink.order) == 0:
+	if Table_number.number == None or (Dish.order+Drink.order+Africa.order) == 0:
 		valid = False
 	else:
 		valid = True
@@ -296,6 +411,7 @@ def delete():
 			dish[key].reset()
 		for key in drink:
 			drink[key].reset()
+		nothing.reset()
 
 	else:
 		send_label.config(text="餐點或桌號尚未選擇！")
@@ -309,11 +425,11 @@ def delete():
 def finish():
 	thank = Label(window, text="已收到您的訂單，訂單如下：", font=label_font, bg="sienna1", fg="Black")
 	thank.place(x=350, y=100)
-	allinfo = LabelFrame(window, text="您的訂單", labelanchor=N, width=700, height=400, bg="tomato1", bd=10, relief="ridge", fg="goldenrod1", font=info_font)
+	allinfo = LabelFrame(window, text="您的訂單", labelanchor=N, width=700, height=480, bg="tomato1", bd=10, relief="ridge", fg="goldenrod1", font=info_font)
 	allinfo.place(x=250, y=200)
 
-	left_info = Frame(allinfo, width=350, height=400, bg="tomato2", bd=5, relief="ridge")
-	right_info = Frame(allinfo, width=350, height=400, bg="tomato2", bd=5, relief="ridge")
+	left_info = Frame(allinfo, width=350, height=480, bg="tomato2", bd=5, relief="ridge")
+	right_info = Frame(allinfo, width=350, height=480, bg="tomato2", bd=5, relief="ridge")
 	left_info.pack(side=LEFT, fill=Y, expand=1)
 	right_info.pack(side=RIGHT, fill=Y, expand=1)
 
@@ -342,6 +458,13 @@ def finish():
 			num_dict[key] = Label(left_info, text=quantity+"份", bg='tomato2', fg='black', font=ask_font)
 			num_dict[key].place(x=180, y=50+30*c)
 			c += 1
+	if Africa.order != 0:
+		key = "非洲佳餚"
+		quantity = "1"
+		order_dict[key] = Label(left_info, text=key, bg='tomato2', fg='black', font=ask_font)
+		order_dict[key].place(x=20, y=50+30*c)
+		num_dict[key] = Label(left_info, text=quantity+"份", bg='tomato2', fg='black', font=ask_font)
+		num_dict[key].place(x=180, y=50+30*c)
 
 	table_info = Label(right_info, text="您的用餐桌號", bg='tomato2', fg='black', font=ask_font)
 	table_info.place(x=20, y=15)
@@ -410,4 +533,4 @@ send_button.place(x=300, y=300)
 window.mainloop()
 
 print("ending")
-sys.exit(0)
+sys.exit()
