@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.font import *
 from PIL import Image, ImageTk
-import BTgui
+import BTgui_17
 import bfs
 import time
 import csv
@@ -33,16 +33,16 @@ process()
 
 window = Tk()
 window.title("老司機送餐系統")
-
+window.resizable(False, False)
 
 
 def center_window(window, width, height):
-    screenwidth = window.winfo_screenwidth()
-    screenheight = window.winfo_screenheight()
-    size = '%dx%d+%d+%d' % (width, height, (screenwidth - width)/2, (screenheight - height)/2-20)
+    window.update() 
+    screenwidth, screenheight = window.maxsize()
+    size = '%dx%d+%d+%d' % (width, height, (screenwidth - width)/2-10, (screenheight - height)/2-30)
     window.geometry(size)
 
-center_window(window, 1200, 750)
+center_window(window, 1500, 750)
 window.config(bg="sienna1")
 
 
@@ -59,7 +59,7 @@ ask_font = Font(family="Yu Gothic UI Semibold", size=15)
 table_font = Font(family="Yu Gothic UI Semibold", size=18)
 
 logo_temp = Image.open("pic/logo.jpg")
-logo_temp = logo_temp.resize((200, 120), Image.ANTIALIAS)
+logo_temp = logo_temp.resize((250, 150), Image.ANTIALIAS)
 logo_pic = ImageTk.PhotoImage(logo_temp)
 
 dish_name = ["套餐A", "套餐B", "套餐C", "哞哞堡", "小豬多P堡", "香吉堡"]
@@ -84,11 +84,11 @@ hamburger_temp = hamburger_temp.resize((100, 100), Image.ANTIALIAS)
 hamburger_pic = ImageTk.PhotoImage(hamburger_temp)
 
 car_temp = Image.open("pic/快上車.jpg")
-car_temp = car_temp.resize((350, 150), Image.ANTIALIAS)
+car_temp = car_temp.resize((430, 170), Image.ANTIALIAS)
 car_pic = ImageTk.PhotoImage(car_temp)
 
 carcar_temp = Image.open("pic/carcar.jpg")
-carcar_temp = carcar_temp.resize((350, 150), Image.ANTIALIAS)
+carcar_temp = carcar_temp.resize((430, 170), Image.ANTIALIAS)
 carcar_pic = ImageTk.PhotoImage(carcar_temp)
 
 ji_temp = Image.open("pic/雞.jpg")
@@ -96,7 +96,7 @@ ji_temp = ji_temp.resize((230, 160), Image.ANTIALIAS)
 ji_pic = ImageTk.PhotoImage(ji_temp)
 
 water_temp = Image.open("pic/water.jpg")
-water_temp = water_temp.resize((200, 150), Image.ANTIALIAS)
+water_temp = water_temp.resize((230, 160), Image.ANTIALIAS)
 water_pic = ImageTk.PhotoImage(water_temp)
 
 class Dish():
@@ -111,11 +111,11 @@ class Dish():
 		self.down = Button(choose, image=down_pic, bg="mint cream", command=self.minus, state='disabled')
 		self.up = Button(choose, image=up_pic, bg="mint cream", command=self.plus)
 		self.zero = Button(choose, text="R", width=2, font=button_font, bg="mint cream", command=self.reset)
-		self.label.place(x=15, y=Dish.pos-4)
-		self.count.place(x=120, y=Dish.pos)
-		self.up.place(x=160, y=Dish.pos)
-		self.down.place(x=200, y=Dish.pos)
-		self.zero.place(x=240, y=Dish.pos)
+		self.label.place(x=30, y=Dish.pos-4)
+		self.count.place(x=135, y=Dish.pos)
+		self.up.place(x=175, y=Dish.pos)
+		self.down.place(x=215, y=Dish.pos)
+		self.zero.place(x=255, y=Dish.pos)
 		Dish.pos += 35
 		Dish.total += 1
 
@@ -159,11 +159,11 @@ class Drink():
 		self.down = Button(choose, image=down_pic, bg="mint cream", command=self.minus, state='disabled')
 		self.up = Button(choose, image=up_pic, bg="mint cream", command=self.plus)
 		self.zero = Button(choose, text="R", width=2, font=button_font, bg="mint cream", command=self.reset)
-		self.label.place(x=300, y=Drink.pos-4)
-		self.count.place(x=420, y=Drink.pos)
-		self.up.place(x=460, y=Drink.pos)
-		self.down.place(x=500, y=Drink.pos)
-		self.zero.place(x=540, y=Drink.pos)
+		self.label.place(x=350, y=Drink.pos-4)
+		self.count.place(x=470, y=Drink.pos)
+		self.up.place(x=510, y=Drink.pos)
+		self.down.place(x=550, y=Drink.pos)
+		self.zero.place(x=590, y=Drink.pos)
 		Drink.pos += 35
 		Drink.total += 1
 
@@ -208,11 +208,11 @@ class Africa():
 		self.down = Button(choose, image=down_pic, bg="mint cream", command=self.minus, state='disabled')
 		self.up = Button(choose, image=up_pic, bg="mint cream", command=self.plus)
 		self.zero = Button(choose, text="R", width=2, font=button_font, bg="mint cream", command=self.reset)
-		self.label.place(x=15, y=Africa.pos-4)
-		self.count.place(x=120, y=Africa.pos)
-		self.up.place(x=160, y=Africa.pos)
-		self.down.place(x=200, y=Africa.pos)
-		self.zero.place(x=240, y=Africa.pos)
+		self.label.place(x=30, y=Africa.pos-4)
+		self.count.place(x=135, y=Africa.pos)
+		self.up.place(x=175, y=Africa.pos)
+		self.down.place(x=215, y=Africa.pos)
+		self.zero.place(x=255, y=Africa.pos)
 
 	def plus(self):
 		self.num += 1
@@ -252,6 +252,7 @@ class Africa():
 		Africa.order = 0
 		self.count.config(text=self.num)
 		self.down.config(state="disabled")
+		self.up.config(state="normal")
 		for ele in dish_name:
 			dish[ele].down.config(state="disabled")
 			dish[ele].up.config(state="normal") 
@@ -283,14 +284,14 @@ welcome = Label(window, text="歡迎光臨老司機！", font=label_font, bg="si
 welcome.pack()
 
 car_img = Label(window, image=car_pic, bd=5, relief="ridge")
-car_img.place(x=30, y=20)
+car_img.place(x=70, y=20)
 
 carcar_img = Label(window, image=carcar_pic, bd=5, relief="sunken")
-carcar_img.place(x=800, y=20)
+carcar_img.place(x=980, y=20)
 
 
 #Choose your orders
-choose = LabelFrame(window, text="請選擇您的餐點", labelanchor=N, width=500, height=500, bg="goldenrod1", bd=10, relief="ridge", fg="brown1", font=choose_font)
+choose = LabelFrame(window, text="請選擇您的餐點", labelanchor=N, width=600, height=500, bg="goldenrod1", bd=10, relief="ridge", fg="brown1", font=choose_font)
 choose.pack(padx=30, ipadx=50, side=LEFT)
 
 for ele in dish_name:
@@ -300,7 +301,7 @@ for ele in drink_name:
 nothing = Africa("非洲佳餚")
 
 ji_img = Label(choose, image=ji_pic, bd=3, relief="sunken")
-ji_img.place(x=25, y=285)
+ji_img.place(x=40, y=285)
 
 """
 def sing():
@@ -309,32 +310,32 @@ song_img = Button(choose, image=song_pic, bd=3, relief="sunken", command=sing)
 song_img.place(x=330, y=295)
 """
 water_img = Label(choose, image=water_pic, bd=3, relief="sunken")
-water_img.place(x=330, y=295)
+water_img.place(x=370, y=285)
 
 #Info
 info = LabelFrame(window, text="請確認您的用餐資訊", labelanchor=N, width=500, height=500, bg="tomato1", bd=10, relief="ridge", fg="goldenrod1", font=info_font)
 info.pack(padx=30, ipadx=50, side=RIGHT)
 
 ask = Label(info, text="您的用餐桌號", font=ask_font, bg="tomato1", fg="Black")
-ask.place(x=10, y=10)
+ask.place(x=40, y=10)
 
 table = Label(info, image=table_pic, bd=2, relief="ridge")
-table.place(x=290, y=30)
+table.place(x=380, y=30)
 
 table_button = dict()
 
 for i in range(1,4):
-	table_button[i] = Table_number(i, 20+(i-1)*90, 50)
+	table_button[i] = Table_number(i, 70+(i-1)*90, 60)
 for i in range(4,6):
-	table_button[i] = Table_number(i, 65+(i-4)*90, 130)
+	table_button[i] = Table_number(i, 115+(i-4)*90, 140)
 
 #PS.
 PS = Label(info, text="備註(有其他需要可在此註明)", font=ask_font, bg="tomato1", fg="Black")
-PS.place(x=10, y=200)
+PS.place(x=40, y=220)
 
 var = StringVar()
-content = Entry(info, width=50, textvariable=var, bg="white", bd=4, font=button_font)
-content.place(x=10, y=240)
+content = Entry(info, width=70, textvariable=var, bg="white", bd=4, font=button_font)
+content.place(x=40, y=260)
 
 valid = True
 dish_order = ""
@@ -383,8 +384,10 @@ def store():
 		date = str(now.tm_year)+'/'+str(now.tm_mon)+'/'+str(now.tm_mday)
 		clock = str(now.tm_hour) +':'+str(now.tm_min)+':'+str(now.tm_sec).zfill(2)
 		PS_word = var.get()
-		writer.writerow([date, clock, dish_order[:-1], str(Dish.order+Drink.order), str(Table_number.number), PS_word])
-
+		if Africa.order == 0:
+			writer.writerow([date, clock, dish_order[:-1], str(Dish.order+Drink.order), str(Table_number.number), PS_word])
+		else:
+			writer.writerow([date, clock, dish_order[:-1], "1", str(Table_number.number), PS_word])
 def delete():
 	global PS_word, var
 
@@ -415,18 +418,18 @@ def delete():
 
 	else:
 		send_label.config(text="餐點或桌號尚未選擇！")
-		send_label.place(x=30, y=330)
+		send_label.place(x=75, y=350)
 		window.update()
 		window.after(1500)
 		send_label.config(text="點擊送出訂單！")
-		send_label.place(x=100, y=330)
+		send_label.place(x=160, y=350)
 		window.update()
 
 def finish():
 	thank = Label(window, text="已收到您的訂單，訂單如下：", font=label_font, bg="sienna1", fg="Black")
-	thank.place(x=350, y=100)
+	thank.place(x=500, y=100)
 	allinfo = LabelFrame(window, text="您的訂單", labelanchor=N, width=700, height=480, bg="tomato1", bd=10, relief="ridge", fg="goldenrod1", font=info_font)
-	allinfo.place(x=250, y=200)
+	allinfo.place(x=400, y=200)
 
 	left_info = Frame(allinfo, width=350, height=480, bg="tomato2", bd=5, relief="ridge")
 	right_info = Frame(allinfo, width=350, height=480, bg="tomato2", bd=5, relief="ridge")
@@ -444,9 +447,9 @@ def finish():
 		else:
 			quantity = str(value.num)
 			order_dict[key] = Label(left_info, text=key, bg='tomato2', fg='black', font=ask_font)
-			order_dict[key].place(x=20, y=50+30*c)
+			order_dict[key].place(x=20, y=70+30*c)
 			num_dict[key] = Label(left_info, text=quantity+"份", bg='tomato2', fg='black', font=ask_font)
-			num_dict[key].place(x=180, y=50+30*c)
+			num_dict[key].place(x=180, y=70+30*c)
 			c += 1
 	for key, value in drink.items():
 		if value.num == 0:
@@ -454,26 +457,26 @@ def finish():
 		else:
 			quantity = str(value.num)
 			order_dict[key] = Label(left_info, text=key, bg='tomato2', fg='black', font=ask_font)
-			order_dict[key].place(x=20, y=50+30*c)
+			order_dict[key].place(x=20, y=70+30*c)
 			num_dict[key] = Label(left_info, text=quantity+"份", bg='tomato2', fg='black', font=ask_font)
-			num_dict[key].place(x=180, y=50+30*c)
+			num_dict[key].place(x=180, y=70+30*c)
 			c += 1
 	if Africa.order != 0:
 		key = "非洲佳餚"
 		quantity = "1"
 		order_dict[key] = Label(left_info, text=key, bg='tomato2', fg='black', font=ask_font)
-		order_dict[key].place(x=20, y=50+30*c)
+		order_dict[key].place(x=20, y=70+30*c)
 		num_dict[key] = Label(left_info, text=quantity+"份", bg='tomato2', fg='black', font=ask_font)
-		num_dict[key].place(x=180, y=50+30*c)
+		num_dict[key].place(x=180, y=70+30*c)
 
 	table_info = Label(right_info, text="您的用餐桌號", bg='tomato2', fg='black', font=ask_font)
 	table_info.place(x=20, y=15)
 	table_num_info = Label(right_info, text=str(Table_number.number)+"號桌", bg='tomato2', fg='black', font=ask_font)
-	table_num_info.place(x=180, y=15)
+	table_num_info.place(x=70, y=80)
 	PS_info = Label(right_info, text="您的備註", bg='tomato2', fg='black', font=ask_font)
-	PS_info.place(x=20, y=150)
-	PS_infoC = Label(right_info, text=PS_word, bg='tomato2', fg='black', font=ask_font, wraplength=220, justify='left')
-	PS_infoC.place(x=20, y=180)
+	PS_info.place(x=20, y=170)
+	PS_infoC = Label(right_info, text=PS_word, bg='tomato2', fg='black', font=ask_font, wraplength=240, justify='left')
+	PS_infoC.place(x=20, y=220)
 	window.update()
 	window.after(5000)
 	thank.destroy()
@@ -486,17 +489,17 @@ def set():
 	welcome.pack()
 	choose.pack(padx=30, ipadx=50, side=LEFT)
 	info.pack(padx=30, ipadx=50, side=RIGHT)
-	ask.place(x=10, y=10)
-	table.place(x=290, y=30)
-	car_img.place(x=30, y=20)
-	carcar_img.place(x=800, y=20)
+	ask.place(x=40, y=10)
+	table.place(x=380, y=30)
+	car_img.place(x=70, y=20)
+	carcar_img.place(x=980, y=20)
 	for i in range(1,4):
-		table_button[i].button.place(x=20+(i-1)*90, y=50)
+		table_button[i] = Table_number(i, 70+(i-1)*90, 60)
 	for i in range(4,6):
-		table_button[i].button.place(x=65+(i-4)*90, y=130)
+		table_button[i] = Table_number(i, 115+(i-4)*90, 140)
 	var = StringVar()
-	content = Entry(info, width=50, textvariable=var, bg="white", bd=4, font=button_font)
-	content.place(x=10, y=240)
+	content = Entry(info, width=70, textvariable=var, bg="white", bd=4, font=button_font)
+	content.place(x=40, y=260)
 
 def send():
 	global weight_list, go_path_list, number_list, back_path_list
@@ -526,9 +529,9 @@ def send():
 
 #send
 send_label = Label(info, text="點擊送出訂單！", font=info_font, bg="tomato1", fg="black")
-send_label.place(x=100, y=330)
+send_label.place(x=160, y=350)
 send_button = Button(info, image=hamburger_pic, bg="honeydew", command=delete)
-send_button.place(x=300, y=300)
+send_button.place(x=400, y=320)
 
 window.mainloop()
 
